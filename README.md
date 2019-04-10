@@ -4,9 +4,9 @@
 #Todo
 ====
 
-##tasks
-+-[] FIFO
-+-[] RR
-+-[] MLFQ(q=1)
-+-[] MLFQ(q=2^i)
-+-[] Lottery
+## tasks
+* [] FIFO
+* [] RR
+* [] MLFQ(q=1)
+* [] MLFQ(q=2^i)
+* [] Lottery
