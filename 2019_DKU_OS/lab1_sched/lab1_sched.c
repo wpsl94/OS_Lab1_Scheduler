@@ -145,7 +145,7 @@ void fifo(){
 		svc_t = 0,			// for service time increase
 		next = 0;			// next task index
 	struct task_t *now= &task[next++];	 // now task
-	printf("\nstart \t %s\n",name);
+	printf("\nstart \t %s\n",tn);
 	printf("   ");
 	while(killed_count < SIZE){
 		// arrival time same service time than next task put queue
@@ -167,7 +167,7 @@ void fifo(){
 	printf("\n");
 	print_table(in);		// print task scheduling table
 	print_performance();	// print scheduling performance ( turnaround time, response time )
-	printf("end \t %s\n\n",name);
+	printf("end \t %s\n\n",tn);
 }
 
 void rr(int max_sched_cnt){
@@ -182,7 +182,7 @@ void rr(int max_sched_cnt){
 	struct task_t *now = &task[next++]; // now task
 	sprintf(max,"%d",max_sched_cnt);
 	strcat(tn,max);
-	printf("\nstart \t %s\n",name);
+	printf("\nstart \t %s\n",tn);
 	printf("   ");
 	while(kill_count < SIZE){
 		printf("%c ",now->name);
@@ -210,7 +210,7 @@ void rr(int max_sched_cnt){
 	printf("\n");
 	print_table(in);	// print scheduling result table
 	print_performance(); // print scheduling performance
-	printf("end \t %s\n\n",name);
+	printf("end \t %s\n\n",tn);
 }
 
 // sort by priority
@@ -245,7 +245,7 @@ void mlfq(){
 		svc_t = 0,
 		next = 0;
 	struct task_t *now = &task[next++];
-	printf("\nstart \t %s\n",name);
+	printf("\nstart \t %s\n",tn);
 	printf("  ");
 	q_put(now);
 	while(kill_count < SIZE){
@@ -269,7 +269,7 @@ void mlfq(){
 	printf("\n");
 	print_table(in);
 	print_performance();
-	printf("end \t %s\n\n",name);
+	printf("end \t %s\n\n",tn);
 }
 
 
@@ -282,7 +282,7 @@ void mlfq_2(){
     svc_t = 0,
     next = 0;
     struct task_t *now = &task[next++];
-    printf("\nstart \t %s\n",name);
+    printf("\nstart \t %s\n",tn);
     printf("  ");
     q_put(now);
     while(kill_count < SIZE){
@@ -306,7 +306,7 @@ void mlfq_2(){
     printf("\n");
     print_table(in);
     print_performance();
-    printf("end \t %s\n\n",name);
+    printf("end \t %s\n\n",tn);
 }
 /*
  MLFQ scheduling finished }*/
@@ -320,7 +320,7 @@ void lottery(){
 		svc_t=0,
 		max, stack_tk, win_number;
 	taskSet();
-	printf("\nstart \t %s\n",name);
+	printf("\nstart \t %s\n",tn);
 	srandom(time(NULL));
 	max = task[i].tk;
 	printf("  ");
@@ -356,7 +356,7 @@ void lottery(){
 	printf("\n");
 	print_table(in);
 	print_performance();
-	printf("end \t %s\n\n",name);
+	printf("end \t %s\n\n",tn);
 }
 
 
