@@ -293,8 +293,8 @@ void mlfq_2(){
         }
         printf("%c ",now->name);
         if(now && now->rst == -1) now->rst = svc_t - now->arv;
-        in[svc_t*2] = now->name;
-        now->prt++;
+        in[svc_t++] = now->name;
+        now->prt*=2;
         if(--now->svc <= 0){
             kill_count++;
             now->tat = svc_t - now->arv;
