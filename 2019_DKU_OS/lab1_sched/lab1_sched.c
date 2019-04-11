@@ -1,8 +1,8 @@
 /*
 *	DKU Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
-*	    Student id : 
-*	    Student name : 
+*	    Student id : 32141444
+*	    Student name : 김희주
 *
 *   lab1_sched.c :
 *       - Lab1 source file.
@@ -38,26 +38,12 @@ void sched(){
 	rr(1);
 	rr(4);
 	mlfq();
+    mlfq_2();
 	lottery();
 }
 
 
-// start log print
-void startLog(char *name){
-	printf("\nstart \t %s\n",name);
-	printf("------------------------------ \n");
-}
 
-// end log print
-void endLog(char *name){
-	printf("------------------------------ \n");
-	printf("end \t %s\n\n",name);
-}
-
-// enter
-void endl(){
-	printf("\n");
-}
 
 // queue pop
 struct task_t *q_pop(){
@@ -76,13 +62,13 @@ void q_put(struct task_t* task_one){
 // print queue
 void print_queue(){
 	int i=0;
-    endl();
+    printf("\n");
 	for(;i<SIZE;i++){
 		if(queue[i] == NULL) continue;
 		printf("i:%d,name:%c,svc:%d,prt:%d\n",i,queue[i]->name,queue[i]->svc,queue[i]->prt);
 	}
 	printf("top:%d, last:%d\n",qt,ql);
-	endl();
+	printf("\n");
 }
 
 // task array setting
@@ -126,7 +112,7 @@ void print_table(char arr[]){
 				printf("□ ");
 			}
 		}
-		endl();
+		printf("\n");
 	}
 }
 
@@ -138,15 +124,15 @@ void print_performance(){
 	for(;i<SIZE;i++){
 		sum_tat += task[i].tat;
 		sum_rst += task[i].rst;
-		printf("[%c] ",task[i].name);
-		printf("turnaround %2d  ",task[i].tat);
-		printf("response %2d\n",task[i].rst);
+        printf("%c : ",task[i].name);
+		printf("Turnaround Time = %2d  ",task[i].tat);
+		printf("Response Time = %2d\n",task[i].rst);
 	}
 	avg_tat = (float)sum_tat/SIZE;
 	avg_rst = (float)sum_rst/SIZE;
-	printf("[turnaround] ");
-	printf("sum %2d, avg %.2f\n",sum_tat,avg_tat);
-	printf("[reponse]    ");
+	printf("turnaround = ");
+    printf("sum  %2d, avg %.2f\n",sum_tat,avg_tat);
+	printf("reponse =    ");
 	printf("sum %2d, avg %.2f\n",sum_rst,avg_rst);
 }
 
@@ -159,7 +145,7 @@ void fifo(){
 		svc_t = 0,			// for service time increase
 		next = 0;			// next task index
 	struct task_t *now= &task[next++];	 // now task
-	startLog(tn);
+	printf("\nstart \t %s\n",name);
 	printf("   ");
 	while(killed_count < SIZE){
 		// arrival time same service time than next task put queue
@@ -178,10 +164,10 @@ void fifo(){
 			now = q_pop();
 		}
 	}
-	endl();
+	printf("\n");
 	print_table(in);		// print task scheduling table
 	print_performance();	// print scheduling performance ( turnaround time, response time )
-	endLog(tn);
+	printf("end \t %s\n\n",name);
 }
 
 void rr(int max_sched_cnt){
@@ -196,7 +182,7 @@ void rr(int max_sched_cnt){
 	struct task_t *now = &task[next++]; // now task
 	sprintf(max,"%d",max_sched_cnt);
 	strcat(tn,max);
-	startLog(tn);
+	printf("\nstart \t %s\n",name);
 	printf("   ");
 	while(kill_count < SIZE){
 		printf("%c ",now->name);
@@ -221,10 +207,10 @@ void rr(int max_sched_cnt){
 			}
 		}
 	}
-	endl();
+	printf("\n");
 	print_table(in);	// print scheduling result table
 	print_performance(); // print scheduling performance
-	endLog(tn);
+	printf("end \t %s\n\n",name);
 }
 
 // sort by priority
@@ -248,17 +234,18 @@ void sortByPrt(){
 
 }
 
-// multi level feedback queue
+/* multi level feedback queue {
+ */
 void mlfq(){
 	taskSet();
-	char tn[] = "Multi Level Feedback Queue\0",
+	char tn[] = "Multi Level Feedback Queue(q=1)\0",
 		 in[20];
 	int i = 0,
 		kill_count = 0,
 		svc_t = 0,
 		next = 0;
 	struct task_t *now = &task[next++];
-	startLog(tn);
+	printf("\nstart \t %s\n",name);
 	printf("  ");
 	q_put(now);
 	while(kill_count < SIZE){
@@ -279,16 +266,50 @@ void mlfq(){
 			sortByPrt();
 		}
 	}
-	endl();
+	printf("\n");
 	print_table(in);
 	print_performance();
-	endLog(tn);
+	printf("end \t %s\n\n",name);
 }
 
 
+void mlfq_2(){
+    taskSet();
+    char tn[] = "Multi Level Feedback Queue(q=2^i)\0",
+    in[20];
+    int i = 0,
+    kill_count = 0,
+    svc_t = 0,
+    next = 0;
+    struct task_t *now = &task[next++];
+    printf("\nstart \t %s\n",name);
+    printf("  ");
+    q_put(now);
+    while(kill_count < SIZE){
+        if(next<SIZE && task[next].arv <= svc_t){
+            now = &task[next++];
+        } else {
+            now = q_pop();
+        }
+        printf("%c ",now->name);
+        if(now && now->rst == -1) now->rst = svc_t - now->arv;
+        in[svc_t*2] = now->name;
+        now->prt++;
+        if(--now->svc <= 0){
+            kill_count++;
+            now->tat = svc_t - now->arv;
+        } else {
+            q_put(now);
+            sortByPrt();
+        }
+    }
+    printf("\n");
+    print_table(in);
+    print_performance();
+    printf("end \t %s\n\n",name);
+}
 /*
- * you need to implement FCFS, RR, SPN, SRT, HRRN, MLFQ scheduler. 
- */
+ MLFQ scheduling finished }*/
 
 void lottery(){
 	char tn[] = "Lottery\0",
@@ -299,7 +320,7 @@ void lottery(){
 		svc_t=0,
 		max, stack_tk, win_number;
 	taskSet();
-	startLog(tn);
+	printf("\nstart \t %s\n",name);
 	srandom(time(NULL));
 	max = task[i].tk;
 	printf("  ");
@@ -332,10 +353,10 @@ void lottery(){
 		}
 
 	}
-	endl();
+	printf("\n");
 	print_table(in);
 	print_performance();
-	endLog(tn);
+	printf("end \t %s\n\n",name);
 }
 
 
