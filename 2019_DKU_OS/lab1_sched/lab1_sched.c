@@ -44,97 +44,87 @@ void sched(){
 
 
 
+//start log, endlog, enter 삭제함 - 영재
+//taskprint, print_table,print_performance 수정함- 영재
+//print_queue 사용하지 않는 것 같아 삭제함- 영재
 
 // queue pop
 struct task_t *q_pop(){
-	struct task_t *task_top = queue[qt];
-	queue[qt] = NULL;
-	if(++qt >= SIZE) qt = 0;
-	return task_top;
+    struct task_t *task_top = queue[qt];
+    queue[qt] = NULL;
+    if(++qt >= SIZE) qt = 0;
+    return task_top;
 }
 
 // queue put
 void q_put(struct task_t* task_one){
-	queue[ql] = task_one;
-	if(++ql >= SIZE) ql = 0;
+    queue[ql] = task_one;
+    if(++ql >= SIZE) ql = 0;
 }
 
-// print queue
-void print_queue(){
-	int i=0;
-    printf("\n");
-	for(;i<SIZE;i++){
-		if(queue[i] == NULL) continue;
-		printf("i:%d,name:%c,svc:%d,prt:%d\n",i,queue[i]->name,queue[i]->svc,queue[i]->prt);
-	}
-	printf("top:%d, last:%d\n",qt,ql);
-	printf("\n");
-}
 
 // task array setting
 void taskSet(){
-	char name[] = "abcde\0";
-	int arv[] = {0,2,4,6,8},
-		svc[] = {3,6,4,5,2},
-		i;
-	qt = ql = 0;
-	for(i=0;i<SIZE;i++){
-		queue[i] = NULL;
-		task[i].name = name[i];
-		task[i].arv = arv[i];
-		task[i].svc = svc[i];
-		task[i].prt = 0;
-		task[i].tat = -1; 
-		task[i].rst = -1;
-		task[i].tk  = svc[i]*100;
-	}
-
+    char name[] = "abcde\0";
+    int arv[] = {0,2,4,6,8},
+    svc[] = {3,6,4,5,2},
+    i;
+    qt = ql = 0;
+    for(i=0;i<SIZE;i++){
+        queue[i] = NULL;
+        task[i].name = name[i];
+        task[i].arv = arv[i];
+        task[i].svc = svc[i];
+        task[i].prt = 0;
+        task[i].tat = -1;
+        task[i].rst = -1;
+        task[i].tk  = svc[i]*100;
+    }
+    
 }
 
 // task array print
 void taskPrint(){
-	int i;
-	for(i=0;i<SIZE;i++){
-		printf("name : %c, arrival Time : %d, service Time : %d, priority : %d\n",task[i].name,task[i].arv,task[i].svc,task[i].prt);
-	}
+    int i;
+    for(i=0;i<SIZE;i++){
+        printf("[%c] \n Arrival Time : %d, service Time : %d",task[i].name,task[i].arv,task[i].svc);
+    }
 }
 
 
 // scheduling table print
 void print_table(char arr[]){
-	int i=0,j,asize=0;
-	for(;i<SIZE;i++){
-		printf("%c ",task[i].name);
-		for(j=0;j<20;j++){
-			if(task[i].name == arr[j]){
-				printf("■ ");
-			} else {
-				printf("□ ");
-			}
-		}
-		printf("\n");
-	}
+    int i=0,j;
+    for(;i<SIZE;i++){
+        printf("%c ",task[i].name);
+        for(j=0;j<20;j++){
+            if(task[i].name == arr[j]){
+                printf("■ ");
+            } else {
+                printf("□ ");
+            }
+        }
+        printf("\n");
+    }
 }
 
 // print average value
 void print_performance(){
-	int sum_tat=0, sum_rst=0,
-		i=0;
-	float avg_tat, avg_rst;
-	for(;i<SIZE;i++){
-		sum_tat += task[i].tat;
-		sum_rst += task[i].rst;
-        printf("%c : ",task[i].name);
-		printf("Turnaround Time = %2d  ",task[i].tat);
-		printf("Response Time = %2d\n",task[i].rst);
-	}
-	avg_tat = (float)sum_tat/SIZE;
-	avg_rst = (float)sum_rst/SIZE;
-	printf("turnaround = ");
-    printf("sum  %2d, avg %.2f\n",sum_tat,avg_tat);
-	printf("reponse =    ");
-	printf("sum %2d, avg %.2f\n",sum_rst,avg_rst);
+    int sum_tat=0, sum_rst=0,
+    i=0;
+    float avg_tat, avg_rst;
+    for(;i<SIZE;i++){
+        sum_tat += task[i].tat;
+        sum_rst += task[i].rst;
+    }
+    avg_tat = (float)sum_tat/SIZE;
+    avg_rst = (float)sum_rst/SIZE;
+    
+    printf("Average Turnaround Time : %.2f\n",avg_tat);
+    printf("Average Response Time : %.2f\n",avg_rst);
 }
+
+
 
 void fifo(){
 	taskSet();		// task variable initialize
@@ -171,48 +161,49 @@ void fifo(){
 }
 
 void rr(int max_sched_cnt){
-	taskSet();  // task initialize
-	char tn[30] = "Round Robin \0",	// task name
-		  max[1],	// for round robin scheduling conut number
-		  in[20];	// string for scheduling result print 
-	int kill_count = 0,	// task killed count
-		svc_t = 0,	// service time
-		next = 0,		// next task index
-		sched_cnt = 0; // schedule count
-	struct task_t *now = &task[next++]; // now task
-	sprintf(max,"%d",max_sched_cnt);
-	strcat(tn,max);
-	printf("\nstart \t %s\n",tn);
-	printf("   ");
-	while(kill_count < SIZE){
-		printf("%c ",now->name);
-		in[svc_t] = now->name;
-		if(now && now->rst == -1) // response time check
-			now->rst = svc_t - now->arv;
-		svc_t++;
-
-		while(next<SIZE && task[next].arv == svc_t){
-			q_put(&task[next++]);		// put next task
-		}
-		if(--now->svc <= 0){
-			kill_count++; // kill task
-			now->tat = svc_t - now->arv; // turnaround time check
-			sched_cnt = 0; // initialize scheduling time
-			now = q_pop();
-		} else {
-			if(++sched_cnt >= max_sched_cnt){
-				sched_cnt = 0; // initialize scheduling time
-				q_put(now);
-				now = q_pop();
-			}
-		}
-	}
-	printf("\n");
-	print_table(in);	// print scheduling result table
-	print_performance(); // print scheduling performance
-	printf("end \t %s\n\n",tn);
+    taskSet();  // task initialize
+    char tn[30] = "Round Robin \0",
+    in[20];    // 스케줄링의 결과를 출력할 때 사용할 문자열
+    
+    int kill_count = 0,    // task killed count
+    svc_t = 0,    // 한 task의 수행해야 할 양을 마친 시간
+    next = 0,        // 다음 task의 인덱스
+    sched_cnt = 0; // schedule 실행 수
+    
+    struct task_t *now = &task[next++]; // now task
+    printf("Round Robin \n");
+    printf("q = %d\n",max_sched_cnt); // 타임퀀텀을 출력한다
+    
+    
+    while(kill_count < SIZE){
+        
+        in[svc_t] = now->name; // 나중에 in[]의 값을 take.[i]와 대조해서 테이블에 ■,□출력하는데 사용한다.
+        
+        if(now && now->rst == -1) // response time을 확인하기 위한 if문!
+            now->rst = svc_t - now->arv; //실행 시간에서 도착한 시간을 빼서, response time의 값을 구한다.
+        svc_t++;
+        
+        while(next<SIZE && task[next].arv == svc_t){
+            q_put(&task[next++]);        // 다음 task로 넘어간다. 만약 ql 인덱스가 SIZE보다 커지면 0으로 바꿔준다 (q_put)
+        }
+        if(--now->svc <= 0){
+            kill_count++; // kill task
+            now->tat = svc_t - now->arv; // turnaround time 을 구한다
+            sched_cnt = 0; // task가 한차례에 얼마나 수행했는지 알려주는 실행 수를 초기화 시켜준다
+            now = q_pop();
+        } else {
+            if(++sched_cnt >= max_sched_cnt){
+                sched_cnt = 0; // 타임퀀텀 만큼 수행하면 초기화 시키고 순서를 넘긴다.
+                q_put(now);
+                now = q_pop();
+            }
+        }
+    }
+    printf("\n");
+    print_table(in);    // print scheduling result table
+    print_performance(); // print scheduling performance
+    printf("end RR %d \n",max_sched_cnt);
 }
-
 // sort by priority
 void sortByPrt(){
 	int now = ql-1,prev;
