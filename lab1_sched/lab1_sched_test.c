@@ -2,7 +2,7 @@
 *	DKU Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
 *	    Student id : 32141444
-*	    Student name : 김희주
+*	    Student name : Kim HeeJu
 *
 *   lab1_sched.c :
 *       - Lab1 source file.
@@ -33,28 +33,7 @@
  *
  */
 
-int main()
-{
-    Queue myqueue;
-    
-    // 큐 초기화
-    InitQueue(&myqueue);
-    
-    // 프로세스 초기값 설정
-    Process a = InitProcess('A', 0, 3);
-    Process b = InitProcess('B', 2, 6);
-    Process c = InitProcess('C', 4, 4);
-    Process d = InitProcess('D', 6, 5);
-    Process e = InitProcess('E', 8, 2);
-    
-    // MLFQ
-    MLFQ(&myqueue, a, b, c, d, e);
-    
-    // MLFQ - Ext
-    MLFQ(&myqueue, a, b, c, d, e, 1, 2, 4);
-    
-    // 로터리
-    Lottery(&myqueue, a, b, c, d, e);
-    
-    return 0;
+int main(int argc, char *argv[]){
+	sched();
 }
+
