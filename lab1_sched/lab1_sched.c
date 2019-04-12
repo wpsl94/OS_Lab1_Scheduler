@@ -303,7 +303,7 @@ void MLFQ(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E
 }
 
 // MLFQ-Ext 스케쥴링
-void MLFQ(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E, int quantum_1, int quantum_2, int quantum_3) {
+void MLFQ_2(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E, int quantum_1, int quantum_2, int quantum_3) {
     
     // queue의 갯수가 3개, 각 큐마다 time quantum 지정 가능한 MLFQ입니다.
     // Priority : myqueue1 > myqueue2 > myqueue3
