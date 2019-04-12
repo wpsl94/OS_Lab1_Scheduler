@@ -14,26 +14,27 @@
 #define _LAB1_HEADER_H
 #define SIZE 5		// process size
 
-// struct of task
+
 struct task_t{
 	char name;	// process name
 	int tat,	// turnarround time
 		rst,	// response time
 		arv,	// Arrival time
 		svc,	// Service time
+		run,	// Runned time
 		prt,	// Priority
 		tk;		// ticket
 };
 
-/* global variable { */
-struct task_t	*queue[SIZE],	// queue
-		task[SIZE];		// task
-int qt,		// queue top index
-	ql;		// queue last index
-/* } global variable */
 
-/* default functions {
-	 will be implement in set.c */
+struct task_t	*queue[SIZE],	// queue
+		task[SIZE];	// task
+int qt,	// queue top index
+    ql;	// queue last index
+
+
+
+int IsEmpty(struct task_t *); // queue empty check
 struct task_t *q_pop();			// queue pop
 void q_put(struct task_t *);		// queue put
 void taskSet();					// task array setting

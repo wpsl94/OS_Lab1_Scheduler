@@ -42,7 +42,13 @@ void sched(){
 	lottery();
 }
 
+//Queue Empty check
 
+int IsEmpty(struct task_t* front){
+	queue[qt] = front;
+	if (queue[qt] == NULL)	return 1;
+	else return 0;
+}
 
 
 // queue pop
@@ -222,7 +228,7 @@ void sortByPrt(){
 	// order by priority 
 	while(1){
 		prev = now-1;
-		if(prev < 0) now = SIZE-1;
+		if(prev < 0) now = SIZE-1;  
 		if(!queue[prev] || queue[prev]->prt == queue[now]->prt || prev == qt) break;
 		if(queue[prev]->prt > queue[now]->prt){
 			temp = queue[now];
@@ -275,29 +281,40 @@ void mlfq(){
 
 void mlfq_2(){
    taskSet();
-	char tn[] = "Multi Level Feedback Queue(q=2i)\0",
-		 in[20];
+	char tn[] = "Multi Level Feedback Queue (q=2i)\n"
+	, in[20];
 	int i = 0,
 		j=0,
 		kill_count = 0,
 		svc_t = 0,
 		next = 0;
+	int quantum_1 = 1;
+	int quantum_2 = 2;
+	int quantum_3 = 4;
+	
 	struct task_t *now = &task[next++];
 	printf("\nstart \t %s\n",tn);
 	printf("  ");
+
 	q_put(now);
+	
 	while(kill_count < SIZE){
 		
+						
 		if(next<SIZE && task[next].arv <= svc_t){
 			now = &task[next++];
+			
 		} else {
 			now = q_pop();
 		}
+		
 		printf("%c ",now->name);
 		if(now && now->rst == -1) now->rst = svc_t - now->arv;
-		in[svc_t++] = now->name;
-		now->prt*=2;
-			
+		if(now->prt==0) svc_t++;
+		else if(now->prt==1) svc_t +=2;
+		else if(now->prt ==2) svc_t +=4;
+		in[svc_t] = now->name;
+		now->prt++;
 		if(--now->svc <= 0){
 			kill_count++;
 			now->tat = svc_t - now->arv;
@@ -307,13 +324,15 @@ void mlfq_2(){
 			
 		}
 	}
-	printf("\n");
+	printf("\n"); //table print
 	print_table(in);
 	print_performance();
 	printf("end \t %s\n\n",tn);
 }
 /*
  MLFQ scheduling finished }*/
+
+
 
 void lottery(){
 	char tn[] = "Lottery\0",
