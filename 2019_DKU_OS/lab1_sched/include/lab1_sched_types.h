@@ -15,41 +15,57 @@
 #define SIZE 5		// process size
 
 // struct of task
-struct task_t{
-	char name;	// process name
-	int tat,	// turnarround time
-		rst,	// response time
-		arv,	// Arrival time
-		svc,	// Service time
-		prt,	// Priority
-		tk;		// ticket
-};
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-/* global variable { */
-struct task_t	*queue[SIZE],	// queue
-				task[SIZE];		// task
-int qt,		// queue top index
-	ql;		// queue last index
-/* } global variable */
+// 그래프 그리기 위한 함수의 인자 전역변수 선언
+int arnum = 0;
+char arr[20] = { 0 };
 
-/* default functions {
-	 will be implement in set.c */
-struct task_t *q_pop();			// queue pop
-void q_put(struct task_t *);		// queue put
-void taskSet();					// task array setting
-void taskPrint();				// task array  print
-void print_queue();				// queue print
-void print_table(char *);		// shceduling table print
-void print_performance();		// print scheduling performance
-/* } default functions */
+// 프로세스 구조체 (pid, arvTime, sevTime, runned_time)
+typedef struct Process
+{
+    char pid;
+    int arvTime;
+    int sevTime;
+    int runned_time;
+}Process;
 
-/* scheduling functions { */
-void fifo();		//first in first out
-void rr(int);	// round robine
-void mlfq();		// Multi level feedback queue(q=1)
-void mlfq_2();        //Multi level feedback queue(q=2^i)
-void lottery();	//lottery
-/* } scheduling functions */
+// 체인노드 구조체 (data, link)
+typedef struct ChainNode
+{
+    Process proc;
+    struct ChainNode* link;
+}ChainNode;
+
+// 큐 구조체 (front, rear, count)
+typedef struct Queue
+{
+    ChainNode *front;
+    ChainNode *rear;
+    
+    int count;
+}Queue;
+
+Process InitProcess(char, int, int);
+void InitQueue(Queue*);
+int IsEmpty(Queue*);
+void push(Queue* , Process);
+void pop(Queue);
+void Finish(Queue* , Queue* , Process);
+void Run(Queue*, Process );
+void clear_arr(char* );
+void Q_graph(char* arr1);
+void input_proc(Process, Queue *, int ;
+void MLFQ(Queue *, Process, Process, Process, Process, Process);
+void MLFQ(Queue *, Process, Process, Process, Process, Process , int , int , int );
+int get_randomnum(int );
+int get_total_sevT(Process, Process, Process, Process, Process);
+int get_ticket(Process, int , int );
+int add(int* , int , int );
+void Lottery(Queue *, Process, Process, Process, Process, Process);
+
 
 
 #endif /* LAB1_HEADER_H*/
