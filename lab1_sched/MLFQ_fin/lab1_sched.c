@@ -38,7 +38,6 @@ void sched(){
 	rr(1);
 	rr(4);
 	mlfq_exe();
-	lottery();
 }
 
 
@@ -684,54 +683,5 @@ Queue myqueue;
 /*
  MLFQ scheduling finished }*/
 
-
-
-void lottery(){
-	char tn[] = "Lottery\0",
-		 in[20];
-	int i = 0,
-		kill_count = 0,
-		arv_cnt=1,
-		svc_t=0,
-		max, stack_tk, win_number;
-	taskSet();
-	printf("\nstart \t %s\n",tn);
-	srandom(time(NULL));
-	max = task[i].tk;
-	printf("  ");
-	while(kill_count < SIZE){
-		svc_t++;
-		win_number = random() % max;
-		for(i=stack_tk=0;i<arv_cnt;i++){
-			if(task[i].svc>0) stack_tk += task[i].tk;
-			if(win_number < stack_tk){
-				if(task[i].svc == 0) continue;
-				printf("%c ",task[i].name);
-				if(task[i].rst == -1)
-					task[i].rst = svc_t - task[i].arv -1;
-				in[svc_t-1] = task[i].name;
-				if(task[i].rst == -1)
-					task[i].rst == svc_t - task[i].arv;
-				if(--task[i].svc<=0){
-					kill_count++;
-					max -= task[i].tk;
-					task[i].tat = svc_t - task[i].arv;
-				}
-				break;
-			}
-		}
-		for(i=arv_cnt;i<SIZE;i++){
-			if(task[i].arv <= svc_t){
-				max += task[i].tk;
-				arv_cnt++;
-			}
-		}
-
-	}
-	printf("\n");
-	print_table(in);
-	print_performance();
-	printf("\nstart \t %s\n",tn);
-}
 
 

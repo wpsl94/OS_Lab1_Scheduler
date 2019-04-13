@@ -90,7 +90,7 @@ void rr(int);	// round robine
 void mlfq_exe();  //execute mlfq
 void mlfq();		// Multi level feedback queue(q=1)
 void mlfq_2();        //Multi level feedback queue(q=2^i)
-void lottery();	//lottery
+
 /* } scheduling functions */
 
 
