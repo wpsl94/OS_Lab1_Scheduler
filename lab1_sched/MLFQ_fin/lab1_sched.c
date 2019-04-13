@@ -211,8 +211,13 @@ void rr(int max_sched_cnt){
 }
 
 
-// 프로세스 초기화하는 함수
-Process InitProcess(char pid, int at, int st)
+///*****************************///
+///**     MLFQ Scheduling     **///
+///*****************************///
+
+///////////////////////////* Initializing Function *///////////////////////////
+
+Process InitProcess(char pid, int at, int st)// 프로세스 초기화하는 함수
 {
 	Process p;
 
@@ -224,8 +229,8 @@ Process InitProcess(char pid, int at, int st)
 	return p;
 }
 
-// 큐 초기화하는 함수
-void InitQueue(Queue *myqueue)
+
+void InitQueue(Queue *myqueue)// 큐 초기화하는 함수
 {
 	myqueue->front = NULL;
 	myqueue->rear = NULL;
@@ -233,8 +238,11 @@ void InitQueue(Queue *myqueue)
 	srand((unsigned)time(NULL));
 }
 
-// 큐 비어있는지 검사하는 함수(비어있으면 1, 아니면 0)
-int IsEmpty(Queue *myqueue)
+
+
+///////////////////////////* Queue Function *///////////////////////////
+
+int IsEmpty(Queue *myqueue)// 큐 비어있는지 검사하는 함수(비어있으면 1, 아니면 0)
 {
 	if (myqueue->front == NULL)
 		return 1;
@@ -278,23 +286,25 @@ void pop(Queue *myqueue)
 	return;
 }
 
-// 프로세스 종료시 호출되는 함수
-void Finish(Queue *myqueue1, Queue *myqueue2, Process p)
+
+///////////////////////////* Process Function *///////////////////////////
+
+void Finish(Queue *myqueue1, Queue *myqueue2, Process p)// 프로세스 종료시 호출되는 함수
 {
 	push(myqueue2, p);
 	pop(myqueue1);
 }
 
-// 프로세스 실행시 호출되는 함수
-void Run(Queue *myqueue, Process *p)
+
+void Run(Queue *myqueue, Process *p)// 프로세스 실행시 호출되는 함수
 {
 	p->runned_time++;
 	arr[arnum] = p->pid;
 	arnum++;
 }
 
-// 전역변수 초기화 함수
-void clear_arr(char* arr)
+
+void clear_arr(char* arr)// 전역변수 초기화 함수
 {
 	for (int i = 0; i < 20; i++)
 	{
@@ -304,8 +314,8 @@ void clear_arr(char* arr)
 }
 
 
-// 그래프 그리는 함수
-void Q_graph(char* arr1)
+
+void Q_graph(char* arr1) // 그래프 그리는 함수
 {
 	int i;
 
@@ -372,15 +382,17 @@ void Q_graph(char* arr1)
 }
 
 
-// 프로세스 입력하는 함수
-void input_proc(Process A, Queue *myqueue, int runtime)
+
+void input_proc(Process A, Queue *myqueue, int runtime) // 프로세스 입력하는 함수
 {
 	if (A.arvTime == runtime) {
 		push(myqueue, A);
 	}
 }
 
-// MLFQ 스케쥴링
+
+///////////////////////////* MLFQ SCHEDULING START *///////////////////////////
+
 void MLFQ(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E) {
 
 	// queue의 갯수가 3개, time quantum이 1인 MLFQ입니다.
@@ -483,10 +495,10 @@ void MLFQ(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E
 	Q_graph(arr); // 그래프 그리기
 }
 
-// MLFQ-Ext 스케쥴링
-void MLFQ_EXT(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E, int quantum_1, int quantum_2, int quantum_3) {
 
-	// queue의 갯수가 3개, 각 큐마다 time quantum 지정 가능한 MLFQ입니다.
+
+// MLFQ-EXT
+void MLFQ_EXT(Queue *myqueue1, Process A, Process B, Process C, Process D, Process E, int quantum_1, int quantum_2, int quantum_3) {
 	// Priority : myqueue1 > myqueue2 > myqueue3
 
 	printf("\nMLFQ(q=2^i) 스케쥴링 입니다.\n\n");
@@ -680,8 +692,7 @@ Queue myqueue;
 
 }
 
-/*
- MLFQ scheduling finished }*/
+/* MLFQ scheduling finished */
 
 
 
