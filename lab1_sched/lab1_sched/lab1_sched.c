@@ -513,7 +513,7 @@ void MLFQ_2(Queue *myQ1, Process a, Process b, Process c, Process d, Process e, 
 				proc_start(&myQ3, &myQ3.front->proc);
 				qt3++;
 
-				if (qt3 < quantum_3) { // time quantum이 남았을 경우
+				if (qt3 < quantum_3) { 
 					put_in(a, myQ1, runtime + 1);
 					put_in(b, myQ1, runtime + 1);
 					put_in(c, myQ1, runtime + 1);
