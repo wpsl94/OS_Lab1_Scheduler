@@ -240,8 +240,8 @@ void proc_end(Queue *myQ1, Queue *myQ2, Process p)  // Process end
 void proc_start(Queue *myQ, Process *p)  //Process Start
 {
 	p->runned_time++;
-	arr[num] = p->name;
-	num++;
+	arr[array_num] = p->name;
+	array_num++;
 }
 
 
@@ -251,7 +251,7 @@ void clear_job(char* arr) // clear array
 	{
 		arr[i] = 0;
 	}
-	num = 0;
+	array_num = 0;
 }
 
 
@@ -530,8 +530,8 @@ void MLFQ_2(Queue *myQ1, Process a, Process b, Process c, Process d, Process e, 
 			}
 		}
 		else if (IsEmpty(myQ1) == 1 && IsEmpty(&myQ2) == 1 && IsEmpty(&myQ3) == 1) {
-			arr[num] = 'O';
-			num++;
+			arr[array_num] = 'O';
+			array_num++;
 			runtime++;
 
 			put_in(a, myQ1, runtime);

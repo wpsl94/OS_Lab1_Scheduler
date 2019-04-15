@@ -39,7 +39,7 @@ int queue_top,
  *
  */
 /////////for draw table/////////
-int num = 0;
+int array_num = 0;
 char arr[20] = { 0 };
 
 
