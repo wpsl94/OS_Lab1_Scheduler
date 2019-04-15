@@ -42,6 +42,7 @@ void sched(){
 }
 
 
+
 /* * * RR * * */
 // 큐 pop
 struct task_info *queue_pop(){
@@ -118,7 +119,7 @@ void rr(int max){
 	tasklist();  
 	char   s_result[20];	// 스케줄링의 결과를 출력할 때 사용할 문자
 	int count = 0,	// SIZE를 넘는 수만큼 실행되면 안되기에 count를 세주기위한 변수
-	service_enc_t = 0,	//한 task가 수행해야 할 시간을 마친 시간 
+	service_end_t = 0,	//한 task가 수행해야 할 시간을 마친 시간을 체크하기 위한 변수
 		next = 0,		// 다음 task 인덱스 
 		schedule_count = 0; // schedule 실행 수 
 	struct task_info *now = &task[next++]; // 지금 수행중인 task
@@ -127,19 +128,18 @@ void rr(int max){
     	printf("q = %d\n",max); // 타임퀀텀을 출력한다
 	while(count < SIZE){
 		
-		s_result[service_enc_t] = now->name; 
+		s_result[service_end_t] = now->name;
 	// 나중에 result[]의 값을 take.[i]와 대조해서 테이블에 ■,□출력하는데 사용한다.
 		if(now && now->response_t == -1) // response time 을 확인하기 위한 if문
-			now->response_t = service_enc_t - now->arrive_t;
-		service_enc_t++;
-	//실행 시간에서 도착한 시간을 빼서, response time의 값을 구한다.
+			now->response_t = service_end_t - now->arrive_t;
+		service_end_t++;
 
-		while(next<SIZE && task[next].arrive_t == service_enc_t){
+		while(next<SIZE && task[next].arrive_t == service_end_t){
 			queue_put(&task[next++]);}
-	// 다음 task로 넘어간다. 만약 ql 인덱스가 SIZE보다 커지면 0으로 바꿔준다 (queue_put)
+	// 다음 프로세스로 넘어간다. 만약 queue_last 인덱스가 SIZE보다 커지면 0으로 바꿔준다 (queue_put)
 		if(--now->service_t <= 0){
-			count++; // 다음 프로세스를 수행.
-			now->turnaround_t = service_enc_t - now->arrive_t; 
+			count++; // 다음 프로세스의 수행을 위해 count 값을 증가시킨다.
+			now->turnaround_t = service_end_t - now->arrive_t;
 		// turnaround time을 구한다
 			schedule_count = 0; 
 	// task가 한차례에 얼마나 수행했는지 알려주는 실행 수를 초기화 시켜준다
@@ -379,8 +379,8 @@ void MLFQ(Queue *myQ1, Process a, Process b, Process c, Process d, Process e) {
 			proc_end(&myQ3, &myQ3, myQ3.front->proc); // Last level Queue -> RR
 		}
 		else if (IsEmpty(myQ1) == 1 && IsEmpty(&myQ2) == 1 && IsEmpty(&myQ3) == 1) { //If All Queue is Empty
-			arr[num] = 'O';
-			num++;		  // next Index
+			arr[array_num] = 'O';
+			array_num++;		  // next Index
 		}
 		runtime++;
         

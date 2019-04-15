@@ -108,7 +108,7 @@ void put_in(struct Process , struct Queue *, int );
 void MLFQ(struct Queue *, struct Process , struct Process , struct Process , struct Process, struct Process);
 void MLFQ_2(struct Queue *, struct Process , struct Process , struct Process , struct Process , struct Process , int , int , int );
 
-/* FIFOm LOTTERY FUNCTION */
+/* FIFO & LOTTERY FUNCTION */
 void set_display(int img[5][20]);
 void set_task();
 void queue_clean(char , int );
